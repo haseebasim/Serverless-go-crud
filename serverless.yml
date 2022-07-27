@@ -1,0 +1,58 @@
+service: go-lambda
+
+frameworkVersion: ">=2.24.0"
+
+provider:
+  name: aws
+  runtime: go1.x
+
+
+
+package:
+ individually: true
+ exclude:
+   - ./**
+
+functions:
+  entryPoint:
+    handler: ./bin/main
+    url: true
+    package:
+      include:
+        - ./bin/middleware/middleware
+        - ./bin/models/models
+        - ./bin/main
+    events:
+      - http:
+          path: /
+          method: get
+      - http:
+          path: /{id}
+          method: get
+          request:
+            parameters:
+              paths:
+                id: true
+      - http:
+          path: /
+          method: post
+          request:
+            parameters:
+              querystrings:
+                firstname: true
+                lastname: true
+      - http:
+          path: /
+          method: patch
+          request:
+            parameters:
+              querystrings:
+                firstname: true
+                lastname: true
+      - http:
+          path: /
+          method: delete
+          
+  
+
+
